@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HellStation</string>
+    <string name="app_tagline">오늘 지옥철, 미리 보고 타세요</string>
+
+    <!-- 접근성 라벨. 화면에 보이지는 않지만 스크린리더가 읽습니다. -->
+    <string name="cd_mascot">지하철 악마 캐릭터</string>
+    <string name="cd_map">서울 지하철 혼잡도 지도</string>
+    <string name="cd_close">닫기</string>
+    <string name="cd_back">뒤로</string>
+    <string name="cd_search">역 검색</string>
+    <string name="cd_zoom_in">확대</string>
+    <string name="cd_zoom_out">축소</string>
+    <string name="cd_reset_view">지도 원래대로</string>
+    <string name="cd_swap_direction">방향 바꾸기</string>
+</resources>

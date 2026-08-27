@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    XML 색은 **안드로이드 시스템이 요구하는 것만** 둡니다.
+    (앱 테마 창 배경, 아이콘 배경, Android 12+ 스플래시)
+
+    화면에서 쓰는 색은 전부 Compose 쪽에 있습니다:
+    app/src/main/java/com/hellstation/ui/theme/Color.kt
+
+    같은 색을 두 군데서 관리하면 반드시 갈라집니다. Compose 쪽이 원본입니다.
+-->
+<resources>
+    <!-- 앱을 켤 때 잠깐 보이는 창 배경. Compose가 그리기 전까지의 색입니다. -->
+    <color name="window_background">#FFF6EE</color>
+    <color name="window_background_dark">#141020</color>
+
+    <!-- 앱 아이콘 -->
+    <color name="ic_launcher_background">#1B1030</color>
+</resources>

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "vibesquad",
+  "agents": {
+    "architect": {
+      "displayName": "설계 담당",
+      "tool": "claude-code",
+      "owns": [
+        "docs/**",
+        "app/build.gradle.kts",
+        "app/src/main/java/com/hellstation/navigation/**"
+      ],
+      "reads": [
+        "app/src/main/java/com/hellstation/data/**",
+        "app/src/main/java/com/hellstation/ui/**"
+      ],
+      "shared": [],
+      "denied": []
+    },
+    "feature-developer": {
+      "displayName": "데이터·기능 담당",
+      "tool": "codex",
+      "owns": [
+        "app/src/main/java/com/hellstation/data/**",
+        "app/src/main/java/com/hellstation/domain/**"
+      ],
+      "reads": [
+        "docs/**",
+        "app/src/main/java/com/hellstation/navigation/**"
+      ],
+      "shared": [],
+      "denied": []
+    },
+    "ui-developer": {
+      "displayName": "화면 담당",
+      "tool": "claude-code",
+      "owns": [
+        "app/src/main/java/com/hellstation/ui/**",
+        "app/src/main/res/**"
+      ],
+      "reads": [
+        "docs/**",
+        "app/src/main/java/com/hellstation/domain/**",
+        "app/src/main/java/com/hellstation/navigation/**"
+      ],
+      "shared": [],
+      "denied": []
+    },
+    "reviewer": {
+      "displayName": "검토 담당",
+      "tool": "codex",
+      "owns": [
+        "docs/review-notes.md"
+      ],
+      "reads": [
+        "app/src/main/java/**"
+      ],
+      "shared": [],
+      "denied": []
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    평문 HTTP 허용 범위.
+
+    서울 열린데이터광장 API 두 곳이 HTTPS를 지원하지 않습니다(docs/api-validation.md에서 실측 확인).
+    Android 9부터 평문 HTTP는 기본 차단이라 예외가 필요한데,
+    매니페스트의 usesCleartextTraffic="true" 는 **앱 전체**를 열어 버립니다.
+
+    그래서 이 파일로 두 도메인만 열고 나머지는 전부 막습니다.
+    새 API를 붙일 때 HTTPS를 쓴다면 여기에 추가할 필요가 없습니다.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 실시간 지하철 도착정보 -->
+        <domain includeSubdomains="false">swopenapi.seoul.go.kr</domain>
+        <!-- 역 좌표 · 노선별 역 정보 -->
+        <domain includeSubdomains="false">openapi.seoul.go.kr</domain>
+    </domain-config>
+</network-security-config>

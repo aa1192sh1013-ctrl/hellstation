@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    테마 아이콘(Android 13+)용 단색 버전.
+    시스템이 색을 입히므로 실루엣만 또렷하면 됩니다 — 뿔과 몸통 윤곽만 남겼습니다.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108"
+    android:tint="#FFFFFF">
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,36 q-8,-10 -6,-18 q9,3 14,13 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M72,36 q8,-10 6,-18 q-9,3 -14,13 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,32 h36 a10,10 0 0 1 10,10 v34 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-34 a10,10 0 0 1 10,-10 z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M40,42 h28 a5,5 0 0 1 5,5 v13 a4,4 0 0 1 -4,4 h-30 a4,4 0 0 1 -4,-4 v-13 a5,5 0 0 1 5,-5 z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M47,53 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M61,53 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+</vector>

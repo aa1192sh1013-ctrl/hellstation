@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(app/src/main/java/com/hellstation/data/**)",
+      "Write(app/src/main/java/com/hellstation/data/**)",
+      "Edit(app/src/main/java/com/hellstation/ui/**)",
+      "Write(app/src/main/java/com/hellstation/ui/**)",
+      "Edit(app/src/main/java/com/hellstation/domain/**)",
+      "Write(app/src/main/java/com/hellstation/domain/**)",
+      "Edit(app/src/main/res/**)",
+      "Write(app/src/main/res/**)",
+      "Edit(docs/review-notes.md)",
+      "Write(docs/review-notes.md)"
+    ]
+  }
+}

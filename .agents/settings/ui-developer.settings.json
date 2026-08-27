@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(docs/**)",
+      "Write(docs/**)",
+      "Edit(app/src/main/java/com/hellstation/domain/**)",
+      "Write(app/src/main/java/com/hellstation/domain/**)",
+      "Edit(app/src/main/java/com/hellstation/navigation/**)",
+      "Write(app/src/main/java/com/hellstation/navigation/**)",
+      "Edit(app/build.gradle.kts)",
+      "Write(app/build.gradle.kts)",
+      "Edit(app/src/main/java/com/hellstation/data/**)",
+      "Write(app/src/main/java/com/hellstation/data/**)",
+      "Edit(docs/review-notes.md)",
+      "Write(docs/review-notes.md)"
+    ]
+  }
+}

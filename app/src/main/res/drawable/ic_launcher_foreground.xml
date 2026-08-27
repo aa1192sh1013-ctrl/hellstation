@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    HellStation 대표 캐릭터 — 지하철 전동차 얼굴에 악마 뿔과 꼬리를 붙인 모습.
+
+    적응형 아이콘 규격이라 108x108 이지만 가운데 72x72 안에만 그림이 들어가야
+    기기가 아이콘을 둥글게/각지게 잘라도 뿔이 잘리지 않습니다.
+    화면 안에서 쓰는 큰 캐릭터는 Compose로 다시 그립니다(ui/character/HellFace.kt).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 꼬리 (몸 뒤로 지나가도록 먼저 그림) -->
+    <path
+        android:strokeColor="#FF3D8B"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M76,74 q12,4 12,-6 q0,-7 -6,-5" />
+    <path
+        android:fillColor="#FF3D8B"
+        android:pathData="M79,58 l8,-5 l0,10 z" />
+
+    <!-- 뿔 -->
+    <path
+        android:fillColor="#FF3D8B"
+        android:pathData="M36,36 q-8,-10 -6,-18 q9,3 14,13 z" />
+    <path
+        android:fillColor="#FF3D8B"
+        android:pathData="M72,36 q8,-10 6,-18 q-9,3 -14,13 z" />
+
+    <!-- 전동차 몸통 -->
+    <path
+        android:fillColor="#FFD84D"
+        android:pathData="M36,32 h36 a10,10 0 0 1 10,10 v34 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-34 a10,10 0 0 1 10,-10 z" />
+
+    <!-- 앞 유리 -->
+    <path
+        android:fillColor="#1B1030"
+        android:pathData="M40,42 h28 a5,5 0 0 1 5,5 v13 a4,4 0 0 1 -4,4 h-30 a4,4 0 0 1 -4,-4 v-13 a5,5 0 0 1 5,-5 z" />
+
+    <!-- 눈 -->
+    <path android:fillColor="#FFFFFF" android:pathData="M47,53 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M61,53 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0" />
+    <path android:fillColor="#1B1030" android:pathData="M48,54 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0" />
+    <path android:fillColor="#1B1030" android:pathData="M62,54 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0" />
+
+    <!-- 씩 웃는 입과 덧니 -->
+    <path
+        android:strokeColor="#1B1030"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M48,71 q6,5 12,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M51,71 l4,0 l-2,4 z" />
+
+    <!-- 전조등 -->
+    <path android:fillColor="#26E0E0" android:pathData="M40,78 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+    <path android:fillColor="#26E0E0" android:pathData="M68,78 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+</vector>

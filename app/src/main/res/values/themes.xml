@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    앱 테마.
+
+    화면은 전부 Compose가 그리므로 이 테마가 하는 일은 두 가지뿐입니다.
+    1. Compose가 첫 프레임을 그리기 전까지의 **창 배경색** — 없으면 흰 화면이 번쩍입니다
+    2. Android 12+ 의 **시스템 스플래시** 모양
+
+    androidx.core:core-splashscreen 의존성은 이미 들어와 있지만
+    installSplashScreen() 호출은 MainActivity(navigation/, 설계 담당 소유)에 있어야 해서
+    여기서는 테마 속성만으로 처리했습니다. 그래서 코드 수정 없이도 동작합니다.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.HellStation" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Android 12+ 시스템 스플래시 -->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">
+            @color/ic_launcher_background
+        </item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">
+            @drawable/ic_launcher_foreground
+        </item>
+    </style>
+</resources>

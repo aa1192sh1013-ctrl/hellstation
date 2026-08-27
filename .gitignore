@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Secrets -- never commit these
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Logs and editor noise
+*.log
+.DS_Store
+
+# vibesquad keeps your plan here; the progress file is local only
+.vibesquad/progress.json
+
+# --- Android / Gradle (설계 담당이 추가) ---
+# local.properties에는 Android SDK 경로와 API 인증키가 들어갑니다. 절대 커밋하지 마세요.
+local.properties
+.gradle/
+*.apk
+*.aab
+*.iml
+.idea/
+captures/
+.cxx/
