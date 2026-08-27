@@ -113,8 +113,17 @@ fun HeatmapScreen(
     val nowSlot = rememberNowSlot(now)
 
     // 슬라이더 위치는 화면을 돌려도 유지되어야 합니다.
-    var selectedSlotMinutes by rememberSaveable(nowSlot.minutesFromMidnight) {
-        mutableIntStateOf(nowSlot.minutesFromMidnight)
+    //
+    // 슬라이더 눈금은 05:30~24:30 뿐인데, 새벽 0시~5시 반 사이의 "지금"은 25:00~29:30 이라
+    // 눈금 밖입니다. 그대로 두면 **손잡이는 맨 왼쪽(05:30)에 붙어 있는데 글씨는 26:00** 이라고
+    // 하는 상태가 됩니다. 눈금 안으로 당겨서 손잡이와 글씨를 맞춥니다.
+    val startSlot = remember(nowSlot) {
+        val first = TimeSlot.ALL.first().minutesFromMidnight
+        val last = TimeSlot.ALL.last().minutesFromMidnight
+        TimeSlot(nowSlot.minutesFromMidnight.coerceIn(first, last))
+    }
+    var selectedSlotMinutes by rememberSaveable(startSlot.minutesFromMidnight) {
+        mutableIntStateOf(startSlot.minutesFromMidnight)
     }
     val selectedSlot = TimeSlot(selectedSlotMinutes)
 
@@ -202,7 +211,7 @@ fun HeatmapScreen(
             TimeSlider(
                 selected = selectedSlot,
                 levels = data.dayLevels,
-                nowSlot = nowSlot,
+                nowSlot = startSlot,
                 onSelect = { selectedSlotMinutes = it.minutesFromMidnight },
                 modifier = Modifier.fillMaxWidth(),
             )

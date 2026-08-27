@@ -5,6 +5,7 @@ import androidx.compose.ui.geometry.Offset
 import com.hellstation.domain.model.LineId
 import com.hellstation.domain.model.Station
 import com.hellstation.domain.model.StationId
+import kotlin.math.pow
 
 /**
  * 노선도를 그리기 위한 배치 정보.
@@ -95,14 +96,14 @@ data class MetroLayout(
             val scaledLatSpan = latSpan * latToLngRatio
             val span = maxOf(lngSpan, scaledLatSpan)
 
-            val positions = located.associate { station ->
+            val raw = located.associate { station ->
                 val location = station.location!!
                 val x = (location.longitude - minLng) / span
                 // 위도가 클수록 북쪽이므로 화면에서는 위로 => y를 뒤집습니다.
                 val y = (maxLat - location.latitude) * latToLngRatio / span
                 station.id to Offset(x.toFloat(), y.toFloat())
             }
-            return MetroLayout(stations, positions, lines)
+            return MetroLayout(stations, spreadCenter(raw), lines)
         }
     }
 }
@@ -147,6 +148,64 @@ data class MetroBounds(
         private const val MIN_SPAN = 0.001f
     }
 }
+
+/**
+ * 도심을 펴고 외곽을 접습니다.
+ *
+ * ## 왜 필요한가
+ *
+ * 위경도를 그대로 쓰면 **서울 도심 200여 역이 한 덩어리로 뭉칩니다.** 수도권 전철은
+ * 도심 반경 5km 안에 역이 빽빽하고 외곽으로는 수십 km를 뻗기 때문입니다.
+ * 실제 노선도가 지리적으로 정확하지 않은 것도 같은 이유입니다 — 정확하게 그리면 못 읽습니다.
+ *
+ * ## 어떻게 하나
+ *
+ * 한가운데에서의 거리 `r`만 `r^[SPREAD_POWER]`로 바꿉니다. 1보다 작은 지수를 쓰면
+ * 가까운 곳은 크게 밀려나고 먼 곳은 덜 밀려나서, **도심이 펴지고 외곽이 접힙니다.**
+ * 방향(각도)은 건드리지 않으므로 어느 역이 어느 쪽에 있는지는 그대로입니다.
+ *
+ * 한가운데는 **역들의 중앙값**으로 잡습니다. 평균을 쓰면 외곽 종점 몇 개가 중심을 끌고 갑니다.
+ */
+private fun spreadCenter(raw: Map<StationId, Offset>): Map<StationId, Offset> {
+    if (raw.size < 3) return raw
+
+    val xs = raw.values.map { it.x }.sorted()
+    val ys = raw.values.map { it.y }.sorted()
+    val center = Offset(xs[xs.size / 2], ys[ys.size / 2])
+
+    val maxRadius = raw.values.maxOf { (it - center).getDistance() }
+    if (maxRadius <= 0f) return raw
+
+    val spread = raw.mapValues { (_, point) ->
+        val delta = point - center
+        val radius = delta.getDistance()
+        if (radius <= 0f) {
+            center
+        } else {
+            val stretched = (radius / maxRadius).pow(SPREAD_POWER) * maxRadius
+            center + delta / radius * stretched
+        }
+    }
+
+    // 펴고 나면 범위가 달라집니다. 다시 0~1 로 맞춰 화면을 꽉 채웁니다.
+    val minX = spread.values.minOf { it.x }
+    val minY = spread.values.minOf { it.y }
+    val width = spread.values.maxOf { it.x } - minX
+    val height = spread.values.maxOf { it.y } - minY
+    val scale = 1f / maxOf(width, height).coerceAtLeast(0.0001f)
+
+    return spread.mapValues { (_, point) ->
+        Offset((point.x - minX) * scale, (point.y - minY) * scale)
+    }
+}
+
+/**
+ * 도심을 얼마나 펼 것인가. 1이면 그대로, 작을수록 도심이 크게 펴집니다.
+ *
+ * 0.55는 눈으로 맞춘 값입니다. 더 낮추면 도심은 시원해지지만 외곽 노선이
+ * 실제보다 훨씬 짧아 보여서 "우리 동네가 서울 바로 옆인가" 싶어집니다.
+ */
+private const val SPREAD_POWER = 0.55f
 
 /**
  * 한 노선의 역 순서. 노선도의 선은 이 순서대로 역을 이어 그립니다.
