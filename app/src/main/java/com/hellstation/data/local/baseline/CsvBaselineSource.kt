@@ -135,7 +135,7 @@ class CsvBaselineSource(
             }
 
             val dayType = DayType.parse(cells.getOrNull(columns.dayType))
-            val lineNumber = cells.getOrNull(columns.line)?.trim()?.toIntOrNull()
+            val lineNumber = parseLineNumber(cells.getOrNull(columns.line))
             val rawName = cells.getOrNull(columns.stationName)
             val direction = Direction.parse(cells.getOrNull(columns.direction))
             val code = cells.getOrNull(columns.stationCode)?.let { normalizeCode(it) }
@@ -184,6 +184,17 @@ class CsvBaselineSource(
         }
         return null
     }
+
+    /**
+     * 노선 번호를 뽑습니다.
+     *
+     * 실제 파일의 호선 칸은 **"1호선"** 입니다. 문서 예시에는 "1"로 적혀 있어서
+     * 그냥 `toIntOrNull()` 을 쓰고 있었는데, 그러면 전부 null 이 되어 **1671행이
+     * 통째로 버려지고 통계가 아예 없는 것처럼 보였습니다.**
+     * "1호선" · "1" · "01호선" 어느 쪽으로 와도 읽히게 숫자만 뽑습니다.
+     */
+    private fun parseLineNumber(raw: String?): Int? =
+        raw?.let { Regex("""\d+""").find(it)?.value?.toIntOrNull() }
 
     private fun normalizeCode(raw: String): String = raw.trim().trimStart('0').ifBlank { "0" }
 

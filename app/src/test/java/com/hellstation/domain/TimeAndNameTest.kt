@@ -192,4 +192,19 @@ class TimeAndNameTest {
         // 전역 출발은 이쪽으로 오는 중이므로 탈 수 있습니다
         assertTrue(arrival(120, ArrivalState.PREV_DEPARTED, now).isBoardable)
     }
+
+    @Test
+    fun `CSV 의 자정 이후 시간대는 24시로 읽는다`() {
+        // 서울교통공사 파일은 "24시00분"이 아니라 "00시00분"으로 적습니다.
+        // 그대로 0분으로 읽으면 운행 시간(05:30~24:30) 밖이라 조용히 버려집니다.
+        assertEquals(TimeSlot(24 * 60), TimeSlot.fromCsvLabel("00시00분"))
+        assertEquals(TimeSlot(24 * 60 + 30), TimeSlot.fromCsvLabel("00시30분"))
+
+        // 낮 시간대는 그대로입니다.
+        assertEquals(TimeSlot(5 * 60 + 30), TimeSlot.fromCsvLabel("5시30분"))
+        assertEquals(TimeSlot(23 * 60 + 30), TimeSlot.fromCsvLabel("23시30분"))
+
+        // 둘 다 운행 시간 안에 들어와야 실제로 쓰입니다.
+        assertTrue(TimeSlot.fromCsvLabel("00시30분")!! in TimeSlot.ALL)
+    }
 }

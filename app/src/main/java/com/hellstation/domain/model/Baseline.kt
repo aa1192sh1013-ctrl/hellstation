@@ -102,7 +102,13 @@ value class TimeSlot(val minutesFromMidnight: Int) {
             val match = Regex("""(\d{1,2})시(\d{1,2})분""").find(label.trim()) ?: return null
             val hour = match.groupValues[1].toIntOrNull() ?: return null
             val minute = match.groupValues[2].toIntOrNull() ?: return null
-            return TimeSlot(hour * 60 + minute)
+
+            // 실제 파일은 자정 넘긴 시간대를 "24시00분"이 아니라 **"00시00분"** 으로 적습니다
+            // (서울교통공사 2026-03-31 파일에서 확인). 그대로 읽으면 심야 두 칸이 0분·30분이
+            // 되어 운행 시간(330~1470분) 밖으로 나가 **조용히 버려집니다.**
+            // 이 표에서 첫차(05:30) 이전 시각은 전부 다음 날입니다.
+            val adjusted = if (hour * 60 + minute < FIRST.minutesFromMidnight) hour + 24 else hour
+            return TimeSlot(adjusted * 60 + minute)
         }
     }
 }
