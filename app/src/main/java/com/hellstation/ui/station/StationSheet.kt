@@ -48,6 +48,7 @@ import com.hellstation.domain.model.TrainOption
 import com.hellstation.domain.model.TrainType
 import com.hellstation.domain.model.Verdict
 import com.hellstation.ui.character.HellFace
+import com.hellstation.ui.character.showsMascot
 import com.hellstation.ui.component.ConfidenceChip
 import com.hellstation.ui.component.ConfidenceNote
 import com.hellstation.ui.component.CrowdBadge
@@ -330,6 +331,8 @@ private fun CrowdSummary(
 ) {
     val dense = HellTheme.window.allowsDenseRow
     // 운행에 문제가 있거나 값을 못 믿을 때는 캐릭터도 놀리지 않습니다 — 멍한 표정으로.
+    // 캐릭터는 지옥일 때만 나옵니다. 평소에는 그 자리를 숫자와 문구가 씁니다.
+    val showFace = board.crowd.level.showsMascot
     val faceLevel = if (playful) board.crowd.level else CrowdLevel.UNKNOWN
 
     if (dense) {
@@ -338,7 +341,7 @@ private fun CrowdSummary(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            HellFace(level = faceLevel, modifier = Modifier.size(84.dp))
+            if (showFace) HellFace(level = faceLevel, modifier = Modifier.size(84.dp))
             SummaryText(
                 board = board,
                 headline = headline,
@@ -357,7 +360,11 @@ private fun CrowdSummary(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                HellFace(level = faceLevel, modifier = Modifier.size(72.dp))
+                if (showFace) {
+                    HellFace(level = faceLevel, modifier = Modifier.size(72.dp))
+                } else {
+                    Spacer(Modifier.width(0.dp))
+                }
                 CrowdPercentText(board.crowd)
             }
             SummaryText(board = board, headline = headline, subtitle = subtitle)

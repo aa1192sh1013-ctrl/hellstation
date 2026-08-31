@@ -77,81 +77,90 @@ object HellTheme {
 
 /** 둥글둥글하게. 키치한 느낌의 절반은 모서리에서 나옵니다. */
 val HellShapes = Shapes(
-    extraSmall = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
-    small = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-    medium = androidx.compose.foundation.shape.RoundedCornerShape(18.dp),
-    large = androidx.compose.foundation.shape.RoundedCornerShape(26.dp),
-    extraLarge = androidx.compose.foundation.shape.RoundedCornerShape(34.dp),
+    // 둥글둥글할수록 어려 보입니다. 34dp 짜리 모서리는 장난감 같았습니다.
+    // 정보를 담는 화면이라 각을 살려 계기판 쪽으로 당깁니다.
+    extraSmall = androidx.compose.foundation.shape.RoundedCornerShape(4.dp),
+    small = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+    medium = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+    large = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+    extraLarge = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
 )
 
 private val LightColors = lightColorScheme(
-    primary = HellPink,
+    primary = NeonCyanDeep,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFFFD9E7),
-    onPrimaryContainer = Color(0xFF66002F),
+    primaryContainer = Color(0xFFC7F0EA),
+    onPrimaryContainer = Color(0xFF00332C),
 
-    secondary = NeonCyan,
-    onSecondary = Color(0xFF00201F),
-    secondaryContainer = Color(0xFFC7F3F3),
-    onSecondaryContainer = Color(0xFF00403F),
+    secondary = HellMagentaDeep,
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFFFD6E6),
+    onSecondaryContainer = Color(0xFF52002A),
 
-    tertiary = Color(0xFF8A6B00),
+    tertiary = Color(0xFF6B5E00),
     onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFFFE7A0),
-    onTertiaryContainer = Color(0xFF2A1F00),
+    tertiaryContainer = Color(0xFFF2E7A8),
+    onTertiaryContainer = Color(0xFF201C00),
 
-    background = CreamLight,
+    background = PaperLight,
     onBackground = InkPurple,
     surface = Color(0xFFFFFFFF),
     onSurface = InkPurple,
-    surfaceVariant = Color(0xFFF2E9E2),
-    onSurfaceVariant = Color(0xFF524A55),
-    surfaceContainer = Color(0xFFFDF1E8),
-    surfaceContainerHigh = Color(0xFFF8E9DE),
+    surfaceVariant = Color(0xFFE7E5EE),
+    onSurfaceVariant = Color(0xFF4A4757),
+    surfaceContainer = Color(0xFFEEEDF3),
+    surfaceContainerHigh = Color(0xFFE6E4EC),
 
-    outline = Color(0xFFB8AFB6),
-    outlineVariant = Color(0xFFE3D8DD),
+    outline = Color(0xFF9C98A8),
+    outlineVariant = Color(0xFFD6D3DE),
 
-    error = Color(0xFFBA1A1A),
+    error = Color(0xFFB3001E),
     onError = Color.White,
-    errorContainer = Color(0xFFFFDAD6),
-    onErrorContainer = Color(0xFF410002),
+    errorContainer = Color(0xFFFFDAD9),
+    onErrorContainer = Color(0xFF40000A),
 
     scrim = Color(0xFF000000),
 )
 
+/**
+ * 다크가 **기본값에 가까운 얼굴**입니다.
+ *
+ * 지하철은 대부분 지하를 달리고, 이 앱을 여는 시간은 이른 아침 아니면 늦은 저녁입니다.
+ * 어두운 바탕이라야 네온 색이 간판처럼 뜨고, 눈도 덜 부십니다.
+ */
 private val DarkColors = darkColorScheme(
-    primary = HellPinkBright,
-    onPrimary = Color(0xFF4C0022),
-    primaryContainer = Color(0xFF7A1042),
-    onPrimaryContainer = Color(0xFFFFD9E7),
+    primary = NeonCyan,
+    onPrimary = Color(0xFF04231F),
+    primaryContainer = Color(0xFF00544A),
+    onPrimaryContainer = Color(0xFFA9F5EB),
 
-    secondary = NeonCyanBright,
-    onSecondary = Color(0xFF003736),
-    secondaryContainer = Color(0xFF11504F),
-    onSecondaryContainer = Color(0xFFC7F3F3),
+    secondary = HellMagenta,
+    onSecondary = Color(0xFF3D0020),
+    secondaryContainer = Color(0xFF6E0038),
+    onSecondaryContainer = Color(0xFFFFD6E6),
 
-    tertiary = TrainYellow,
-    onTertiary = Color(0xFF3A2A00),
-    tertiaryContainer = Color(0xFF574200),
-    onTertiaryContainer = Color(0xFFFFE7A0),
+    tertiary = Color(0xFFF2C53D),
+    onTertiary = Color(0xFF332600),
+    tertiaryContainer = Color(0xFF4A3800),
+    onTertiaryContainer = Color(0xFFF7E3A8),
 
     background = NightBase,
-    onBackground = Color(0xFFF0EAF6),
+    onBackground = Color(0xFFECE8F5),
     surface = NightSurface,
-    onSurface = Color(0xFFF0EAF6),
-    surfaceVariant = Color(0xFF3A3348),
-    onSurfaceVariant = Color(0xFFCCC2D6),
+    onSurface = Color(0xFFECE8F5),
+    surfaceVariant = Color(0xFF2B2839),
+    onSurfaceVariant = Color(0xFF9E98B2),
     surfaceContainer = NightSurface,
     surfaceContainerHigh = NightSurfaceHigh,
 
-    outline = Color(0xFF6F667C),
-    outlineVariant = Color(0xFF3E3649),
+    outline = Color(0xFF615C75),
+    outlineVariant = Color(0xFF322E42),
 
-    error = Color(0xFFFFB4AB),
-    onError = Color(0xFF690005),
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
+    error = Color(0xFFFF8A94),
+    onError = Color(0xFF4A0010),
+    errorContainer = Color(0xFF7A0021),
+    onErrorContainer = Color(0xFFFFD9DC),
 
     scrim = Color(0xFF000000),
 )
+

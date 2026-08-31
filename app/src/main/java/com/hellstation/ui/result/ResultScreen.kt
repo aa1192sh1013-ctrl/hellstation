@@ -48,6 +48,7 @@ import com.hellstation.domain.model.TimeSlot
 import com.hellstation.domain.model.TrainOption
 import com.hellstation.domain.model.Verdict
 import com.hellstation.ui.character.HellFace
+import com.hellstation.ui.character.showsMascot
 import com.hellstation.ui.component.ConfidenceNote
 import com.hellstation.ui.component.CrowdBadge
 import com.hellstation.ui.component.CrowdGauge
@@ -320,11 +321,14 @@ private fun VerdictHero(board: StationBoard) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        HellFace(
-            // 근거가 약하거나 운행에 문제가 있으면 캐릭터도 놀리지 않습니다.
-            level = if (tone == CopyTone.PLAYFUL) board.crowd.level else CrowdLevel.UNKNOWN,
-            modifier = Modifier.size(if (HellTheme.window.height.isShort) 72.dp else 96.dp),
-        )
+        // 캐릭터는 지옥일 때만 나옵니다. 평소에는 결론 글자가 주인공입니다.
+        if (board.crowd.level.showsMascot) {
+            HellFace(
+                // 근거가 약하거나 운행에 문제가 있으면 캐릭터도 놀리지 않습니다.
+                level = if (tone == CopyTone.PLAYFUL) board.crowd.level else CrowdLevel.UNKNOWN,
+                modifier = Modifier.size(if (HellTheme.window.height.isShort) 72.dp else 96.dp),
+            )
+        }
 
         Text(
             text = HellCopy.verdictTag(verdict.verdict),

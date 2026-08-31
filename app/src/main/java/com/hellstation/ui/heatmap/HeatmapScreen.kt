@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -320,6 +321,11 @@ private fun TopBar(
             FilledTonalIconButton(
                 onClick = onSettingsClick,
                 modifier = Modifier.semantics { contentDescription = "설정" },
+                shape = RoundedCornerShape(12.dp),
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Settings,
@@ -419,6 +425,13 @@ private fun MapButton(
         modifier = Modifier
             .size(42.dp)
             .semantics { contentDescription = description },
+        shape = RoundedCornerShape(12.dp),
+        // 기본값(secondaryContainer)은 연분홍이라 사탕처럼 보였습니다.
+        // 지도 위에 뜨는 조작 버튼은 배경과 같은 계열이되 테두리로 구분하는 편이 낫습니다.
+        colors = IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+            contentColor = MaterialTheme.colorScheme.primary,
+        ),
     ) {
         Text(
             text = label,

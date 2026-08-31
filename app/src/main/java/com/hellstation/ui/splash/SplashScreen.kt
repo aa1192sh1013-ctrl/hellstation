@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import com.hellstation.domain.model.CrowdLevel
 import com.hellstation.ui.character.HellFace
-import com.hellstation.ui.theme.HellPink
+import com.hellstation.ui.theme.HellMagenta
 import com.hellstation.ui.theme.HellStationTheme
-import com.hellstation.ui.theme.NeonCyanBright
+import com.hellstation.ui.theme.NeonCyan
 
 /**
  * 앱을 열자마자 잠깐 보이는 화면.
@@ -80,7 +80,7 @@ fun SplashScreen(
                 Brush.verticalGradient(
                     listOf(
                         MaterialTheme.colorScheme.background,
-                        HellPink.copy(alpha = 0.10f + glow * 0.10f),
+                        HellMagenta.copy(alpha = 0.10f + glow * 0.10f),
                         MaterialTheme.colorScheme.background,
                     )
                 )
@@ -119,7 +119,7 @@ fun SplashScreen(
             Text(
                 text = "지금 탈까 · 기다릴까",
                 style = MaterialTheme.typography.labelLarge,
-                color = NeonCyanBright,
+                color = NeonCyan,
                 modifier = Modifier
                     .padding(top = 18.dp)
                     .alpha(0.55f + glow * 0.45f),

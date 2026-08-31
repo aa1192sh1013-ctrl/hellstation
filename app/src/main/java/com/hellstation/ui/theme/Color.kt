@@ -15,22 +15,36 @@ import com.hellstation.domain.model.LineId
 
 // ── 브랜드 ──────────────────────────────────────────────────────────────────
 
-/** 지옥철의 핫핑크. 캐릭터 뿔과 강조에 씁니다. */
-val HellPink = Color(0xFFFF3D8B)
-val HellPinkBright = Color(0xFFFF6BA5)
+/**
+ * ## 왜 이 색인가 — "야근 네온"
+ *
+ * 처음에는 크림색 바탕에 핫핑크였습니다. 키치하긴 한데 **사탕색이라 초등학생 앱처럼**
+ * 보였습니다. 이 앱을 쓰는 사람은 지친 출퇴근길의 직장인입니다.
+ *
+ * 그래서 기준을 바꿨습니다 — **어두운 터널 바탕에 네온 간판**. 심야 사무실, 지하철
+ * 승강장의 형광등, 스크린도어에 비치는 불빛. 채도는 그대로 높지만 바탕이 어두워서
+ * 사탕이 아니라 **간판 불빛**으로 읽힙니다.
+ */
 
-/** 전동차 노랑. 캐릭터 몸통. */
-val TrainYellow = Color(0xFFFFD84D)
+/** 주 액션 색. 어두운 바탕에서 형광등처럼 뜨는 청록. */
+val NeonCyan = Color(0xFF00D9C0)
+val NeonCyanDeep = Color(0xFF00786B)
 
-/** 전조등 시안. */
-val NeonCyan = Color(0xFF17C4C4)
-val NeonCyanBright = Color(0xFF34E0E0)
+/** 위험·강조. 지옥 쪽 신호에만 씁니다. 남발하면 다시 사탕색이 됩니다. */
+val HellMagenta = Color(0xFFFF2E88)
+val HellMagentaDeep = Color(0xFFB3005A)
 
-val InkPurple = Color(0xFF1B1030)
-val CreamLight = Color(0xFFFFF6EE)
-val NightBase = Color(0xFF141020)
-val NightSurface = Color(0xFF201A2E)
-val NightSurfaceHigh = Color(0xFF2B2340)
+/** 전동차 차체. 노랑이 아니라 **쇳덩이 색**입니다. */
+val SteelBody = Color(0xFF2A2738)
+val SteelEdge = Color(0xFF4A4560)
+
+val InkPurple = Color(0xFF13111C)
+val NightBase = Color(0xFF0A0912)
+val NightSurface = Color(0xFF16141F)
+val NightSurfaceHigh = Color(0xFF211E2C)
+
+/** 밝은 모드는 크림이 아니라 **차가운 회색**입니다. 사무실 형광등 아래 종이 느낌. */
+val PaperLight = Color(0xFFF4F3F7)
 
 // ── 혼잡도 5단계 ────────────────────────────────────────────────────────────
 
@@ -94,42 +108,40 @@ data class CrowdPalette(
  */
 val LightCrowdPalette = CrowdPalette(
     easy = CrowdColor(
-        vivid = Color(0xFF1CA566),
-        on = Color(0xFF04301C),
-        soft = Color(0xFFD7F5E7),
-        onSoft = Color(0xFF0B6B41),
+        vivid = Color(0xFF12915A),
+        on = Color(0xFFFFFFFF),
+        soft = Color(0xFFD8F0E4),
+        onSoft = Color(0xFF0A5537),
     ),
     busy = CrowdColor(
-        vivid = Color(0xFFB98708),
-        on = Color(0xFF2A1E00),
-        soft = Color(0xFFFDEFCC),
-        onSoft = Color(0xFF7A5800),
+        vivid = Color(0xFFA87A06),
+        on = Color(0xFFFFFFFF),
+        soft = Color(0xFFF5E9C8),
+        onSoft = Color(0xFF5C4300),
     ),
     bad = CrowdColor(
-        vivid = Color(0xFFFF5900),
-        on = Color(0xFF3A1500),
-        soft = Color(0xFFFFE2D2),
-        onSoft = Color(0xFF8F3A08),
+        vivid = Color(0xFFE84E00),
+        on = Color(0xFFFFFFFF),
+        soft = Color(0xFFFFE0CE),
+        onSoft = Color(0xFF7A2900),
     ),
     hell = CrowdColor(
-        vivid = Color(0xFFF0333B),
-        // 흰 글자는 4.01:1 로 작은 글씨 기준에 못 미쳤습니다. 어두운 글자가 4.5:1 을 넘깁니다.
-        on = Color(0xFF3B0509),
-        soft = Color(0xFFFFD9DB),
-        onSoft = Color(0xFF9E1017),
+        vivid = Color(0xFFCE1F41),
+        on = Color(0xFFFFFFFF),
+        soft = Color(0xFFFBD8DE),
+        onSoft = Color(0xFF6E0A20),
     ),
     wtf = CrowdColor(
-        vivid = Color(0xFFA63BE0),
-        // 여기만 흰 글자가 낫습니다(4.86:1 vs 3.72:1).
+        vivid = Color(0xFF9130CC),
         on = Color(0xFFFFFFFF),
-        soft = Color(0xFFEEDBFA),
-        onSoft = Color(0xFF6A159C),
+        soft = Color(0xFFEEDCFA),
+        onSoft = Color(0xFF4C1170),
     ),
     unknown = CrowdColor(
-        vivid = Color(0xFF938F9D),
-        on = Color(0xFF23202B),
-        soft = Color(0xFFE7E5EA),
-        onSoft = Color(0xFF4F4B59),
+        vivid = Color(0xFF7E7A8A),
+        on = Color(0xFFFFFFFF),
+        soft = Color(0xFFE6E4EC),
+        onSoft = Color(0xFF46434F),
     ),
 )
 
@@ -141,40 +153,40 @@ val LightCrowdPalette = CrowdPalette(
  */
 val DarkCrowdPalette = CrowdPalette(
     easy = CrowdColor(
-        vivid = Color(0xFF3DE58F),
-        on = Color(0xFF00301A),
-        soft = Color(0xFF16402F),
-        onSoft = Color(0xFF7FF0B7),
+        vivid = Color(0xFF35E08A),
+        on = Color(0xFF05301B),
+        soft = Color(0xFF173A28),
+        onSoft = Color(0xFF9FE9C4),
     ),
     busy = CrowdColor(
-        vivid = Color(0xFFFFD34D),
-        on = Color(0xFF302300),
-        soft = Color(0xFF3D3212),
-        onSoft = Color(0xFFFFE494),
+        vivid = Color(0xFFF2C53D),
+        on = Color(0xFF332600),
+        soft = Color(0xFF3A3016),
+        onSoft = Color(0xFFF0DCA0),
     ),
     bad = CrowdColor(
-        vivid = Color(0xFFFF9445),
-        on = Color(0xFF351400),
-        soft = Color(0xFF442612),
-        onSoft = Color(0xFFFFBE8A),
+        vivid = Color(0xFFFF8A3D),
+        on = Color(0xFF3A1600),
+        soft = Color(0xFF3D2718),
+        onSoft = Color(0xFFFFC9A3),
     ),
     hell = CrowdColor(
-        vivid = Color(0xFFFF5B62),
-        on = Color(0xFF3B0509),
-        soft = Color(0xFF4A1A20),
-        onSoft = Color(0xFFFF9EA2),
+        vivid = Color(0xFFFF3E63),
+        on = Color(0xFF3D0011),
+        soft = Color(0xFF3D1A24),
+        onSoft = Color(0xFFFFB3C1),
     ),
     wtf = CrowdColor(
-        vivid = Color(0xFFC77BFF),
-        on = Color(0xFF2C0044),
-        soft = Color(0xFF3A2151),
-        onSoft = Color(0xFFDDB2FF),
+        vivid = Color(0xFFC061FF),
+        on = Color(0xFF2C0047),
+        soft = Color(0xFF2F1E3D),
+        onSoft = Color(0xFFDFB8FF),
     ),
     unknown = CrowdColor(
-        vivid = Color(0xFF6B6878),
-        on = Color(0xFF0F0C16),
-        soft = Color(0xFF2A2635),
-        onSoft = Color(0xFFA5A1B0),
+        vivid = Color(0xFF6A6480),
+        on = Color(0xFF11101A),
+        soft = Color(0xFF242231),
+        onSoft = Color(0xFFA9A4BA),
     ),
 )
 

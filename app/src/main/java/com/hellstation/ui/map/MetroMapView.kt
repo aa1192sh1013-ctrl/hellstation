@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -82,7 +83,9 @@ fun MetroMapView(
             color = if (isDark) Color(0xFFF0EAF6) else Color(0xFF1B1030),
         )
     }
-    val backgroundColor = if (isDark) Color(0xFF0E0A18) else Color(0xFFFFFBF6)
+    // 테마에서 가져옵니다. 예전에는 크림색이 여기 박혀 있어서, 팔레트를 바꿔도
+    // 화면의 대부분을 차지하는 지도만 옛날 색으로 남았습니다.
+    val backgroundColor = MaterialTheme.colorScheme.background
     val controlInset = with(density) { CONTROL_INSET.toPx() }
 
     // 이름이 겹칠 때 무엇을 남길지 정하는 순서입니다. 환승이 많은 역이 먼저 자리를 잡습니다 —
