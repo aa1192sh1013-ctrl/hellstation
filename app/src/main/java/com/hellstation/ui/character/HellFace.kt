@@ -199,8 +199,9 @@ private fun DrawScope.drawWindshield(u: Float) {
  * 처음에는 가로 빛줄기였는데, 전동차 계기판처럼 보여서 악마가 남지 않았습니다.
  * 불꽃으로 바꾸니 **차가운 쇳덩이 안에서 뭔가 타고 있는** 그림이 됩니다.
  *
- * 두 불꽃 모두 **안쪽으로 기울입니다.** 눈썹을 안쪽으로 모으면 화난 얼굴이 되는 것과
- * 같은 원리라, 이것만으로 표정이 섭니다.
+ * 두 불꽃 모두 **바깥쪽으로 눕힙니다.** 화난 눈썹이 `\ /` 모양인 것과 같습니다 —
+ * 안쪽(미간 쪽)이 낮고 바깥쪽이 높아야 화난 얼굴입니다. 반대로 안쪽으로 모으면
+ * `/ \` 가 되어 **걱정하거나 울상인 얼굴**이 됩니다. 처음에 이걸 뒤집어 그렸습니다.
  *
  * 등급은 **불길의 세기**로 나타냅니다. 여유는 작은 불씨, 대환장은 눈 밖으로 넘칩니다.
  * 흰자와 동공을 그리면 그 순간 만화가 되므로 끝까지 넣지 않습니다.
@@ -220,8 +221,9 @@ private fun DrawScope.drawEyes(u: Float, level: CrowdLevel, color: Color) {
     }
     val ink = if (level.isKnown) color else color.copy(alpha = 0.5f)
 
-    drawFlameEye(leftCenter, u, ink, inward = 1f, heat = heat)
-    drawFlameEye(rightCenter, u, ink, inward = -1f, heat = heat)
+    // 왼쪽 불은 왼쪽으로, 오른쪽 불은 오른쪽으로 눕습니다.
+    drawFlameEye(leftCenter, u, ink, outward = -1f, heat = heat)
+    drawFlameEye(rightCenter, u, ink, outward = 1f, heat = heat)
 }
 
 /**
@@ -233,21 +235,21 @@ private fun DrawScope.drawEyes(u: Float, level: CrowdLevel, color: Color) {
  * **둥근 바닥**, 위로 갈수록 **잘록해지는 허리**, 한쪽으로 **눕는 끝**.
  * 셋 중 하나만 빠져도 그냥 세모입니다.
  *
- * @param inward 안쪽이 어느 쪽인가. 왼쪽 눈은 +1, 오른쪽 눈은 -1.
- *   불끝을 안쪽으로 눕혀야 두 불이 미간을 향해 모이면서 **화난 얼굴**이 됩니다
+ * @param outward 바깥쪽이 어느 쪽인가. 왼쪽 눈은 -1, 오른쪽 눈은 +1.
+ *   불끝을 **바깥으로** 눕혀야 안쪽이 낮아지면서 화난 눈썹 모양이 됩니다
  * @param heat 불길의 세기 0~1
  */
 private fun DrawScope.drawFlameEye(
     center: Offset,
     u: Float,
     color: Color,
-    inward: Float,
+    outward: Float,
     heat: Float,
 ) {
     val halfWidth = (3.2f + 1.2f * heat) * u
     val height = (8.5f + 6f * heat) * u
     val bottom = center.y + height * 0.34f
-    val tipX = center.x + inward * (2.4f + 2.4f * heat) * u
+    val tipX = center.x + outward * (2.4f + 2.4f * heat) * u
 
     drawPath(flamePath(center.x, bottom, halfWidth, height, tipX), color)
 

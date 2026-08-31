@@ -430,7 +430,7 @@ object HellCopy {
         CrowdLevel.BAD to listOf(
             "각오는 하고 타세요",
             "가방은 앞으로 메세요",
-            "슬슬 지옥 냄새가",
+            "슬슬 지옥철 냄새가",
         ),
         CrowdLevel.HELL to listOf(
             "지옥문이 열렸습니다",
