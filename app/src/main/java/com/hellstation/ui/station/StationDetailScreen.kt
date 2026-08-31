@@ -88,6 +88,7 @@ fun StationDetailScreen(
                 onDirectionChange = { direction = it },
                 onFindRoute = onFindRoute,
                 onRetry = feed.retry,
+                now = now,
             )
         }
     }

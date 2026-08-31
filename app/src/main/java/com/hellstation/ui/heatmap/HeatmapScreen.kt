@@ -248,6 +248,8 @@ fun HeatmapScreen(
                     viewingSlot = selectedSlot.takeIf {
                         it.minutesFromMidnight != nowSlot.minutesFromMidnight
                     },
+                    // 남은 시간이 실제로 줄어들도록 흐르는 시각을 넘깁니다.
+                    now = now,
                 )
             }
         }

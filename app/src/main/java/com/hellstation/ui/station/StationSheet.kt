@@ -97,8 +97,18 @@ fun StationSheetContent(
      * "3분 후 도착"이 나란히 나오던 문제입니다.
      */
     viewingSlot: TimeSlot? = null,
+    /**
+     * 남은 시간을 계산할 기준 시각.
+     *
+     * 기본값은 **이 묶음을 만든 시각**입니다. 미리보기는 고정된 임시 데이터를 쓰므로
+     * 실제 지금 시각을 넣으면 도착 시각이 엉뚱해집니다.
+     *
+     * 실제 화면은 [com.hellstation.ui.state.rememberNow]로 **흐르는 시각**을 넘겨 주세요.
+     * 안 넘기면 30초마다 데이터를 다시 받을 때까지 값이 그대로라 **시계가 멈춘 것처럼**
+     * 보입니다. 실제로 "2분 30초"가 20초 동안 그대로였습니다.
+     */
+    now: Instant = board.observedAt,
 ) {
-    val now = board.observedAt
 
     // 말투 판단은 HellCopy 한 곳에서만 합니다. 여기서 조건을 다시 쓰면 화면마다 갈라집니다.
     val copy = HellCopy.headline(board.crowd, board.serviceStatus, seed = board.station.name)
@@ -538,7 +548,10 @@ private fun TrainCompareCard(
             color = colors.onSoft,
         )
         Text(
-            text = HellCopy.etaShort(option?.arrival?.secondsUntilArrival(now)),
+            // 카드 하나뿐이니 초까지 보여줍니다. 분 단위로만 쓰면 60초 동안 값이
+            // 그대로라 **시계가 멈춘 것처럼** 보입니다 — 결과 화면과 같은 형식입니다.
+            // 아래 "다가오는 열차" 목록은 다섯 줄이 한꺼번에 초를 세면 어지러우므로 분 단위로 둡니다.
+            text = HellCopy.etaText(option?.arrival?.secondsUntilArrival(now)),
             style = HellTextStyles.boardNumberSmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
