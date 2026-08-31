@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hellstation.domain.model.CrowdLevel
+import com.hellstation.domain.model.ArrivalState
 import com.hellstation.domain.model.Direction
 import com.hellstation.domain.model.Loadable
 import com.hellstation.domain.model.Station
@@ -463,7 +464,10 @@ private fun VerdictTrainCard(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            text = HellCopy.etaText(option?.arrival?.secondsUntilArrival(now)),
+            text = HellCopy.etaText(
+                option?.arrival?.secondsUntilArrival(now),
+                option?.arrival?.state ?: ArrivalState.UNKNOWN,
+            ),
             style = HellTextStyles.boardNumberSmall,
             color = MaterialTheme.colorScheme.onSurface,
         )

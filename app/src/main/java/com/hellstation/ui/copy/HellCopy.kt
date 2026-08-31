@@ -1,5 +1,6 @@
 package com.hellstation.ui.copy
 
+import com.hellstation.domain.model.ArrivalState
 import com.hellstation.domain.model.Confidence
 import com.hellstation.domain.model.CrowdIndex
 import com.hellstation.domain.model.CrowdLevel
@@ -344,19 +345,55 @@ object HellCopy {
         return if (digits.isNotEmpty()) digits else line.displayName.removeSuffix("선").take(2)
     }
 
-    /** 남은 시간을 사람 말로. */
-    fun etaText(seconds: Int?): String = when {
-        seconds == null -> "정보 없음"
+    /**
+     * 남은 시간을 사람 말로.
+     *
+     * ## 초를 모를 때 "--" 를 쓰지 않습니다
+     *
+     * 실측해 보니 API가 주는 열차의 **절반은 `barvlDt` 가 0**입니다(서울역 20대 중 5대만
+     * 초가 있었습니다). 그렇다고 정보가 없는 건 아닙니다 — `arvlCd` 에 "전역 도착",
+     * "전역 출발" 같은 **위치**가 들어 있습니다. "--" 만 내밀면 있는 정보를 버리는 셈이고,
+     * 사용자는 앱이 고장 난 줄 압니다.
+     *
+     * 초를 믿을 수 없을 때는 **그 열차가 어디쯤인지**를 대신 말합니다.
+     */
+    fun etaText(seconds: Int?, state: ArrivalState = ArrivalState.UNKNOWN): String = when {
+        seconds == null -> stateLong(state)
         seconds < 30 -> "곧 도착"
         seconds < 60 -> "1분 이내"
         else -> "${seconds / 60}분 ${(seconds % 60).toString().padStart(2, '0')}초"
     }
 
-    /** 짧은 버전 — 목록 안에서. */
-    fun etaShort(seconds: Int?): String = when {
-        seconds == null -> "--"
+    /** 짧은 버전 — 목록 안에서. 칸이 좁아 두 글자로 줄입니다. */
+    fun etaShort(seconds: Int?, state: ArrivalState = ArrivalState.UNKNOWN): String = when {
+        seconds == null -> stateShort(state)
         seconds < 60 -> "곧"
         else -> "${seconds / 60}분"
+    }
+
+    /** 카드 안. 한 건만 보여주므로 풀어서 씁니다. */
+    private fun stateLong(state: ArrivalState): String = when (state) {
+        ArrivalState.ENTERING -> "진입 중"
+        ArrivalState.ARRIVED -> "도착"
+        ArrivalState.DEPARTED -> "출발함"
+        ArrivalState.PREV_DEPARTED -> "전역 출발"
+        ArrivalState.PREV_ENTERING -> "전역 진입"
+        ArrivalState.PREV_ARRIVED -> "전역 도착"
+        ArrivalState.RUNNING -> "운행 중"
+        ArrivalState.UNKNOWN -> "정보 없음"
+    }
+
+    /** 목록 안. 44dp 칸에 들어가야 해서 두 글자까지만 씁니다. */
+    private fun stateShort(state: ArrivalState): String = when (state) {
+        ArrivalState.ENTERING -> "진입"
+        ArrivalState.ARRIVED -> "도착"
+        ArrivalState.DEPARTED -> "출발"
+        ArrivalState.PREV_DEPARTED,
+        ArrivalState.PREV_ENTERING,
+        ArrivalState.PREV_ARRIVED,
+        -> "전역"
+        ArrivalState.RUNNING -> "운행"
+        ArrivalState.UNKNOWN -> "--"
     }
 
     // ── 문구 고르기 ─────────────────────────────────────────────────────────

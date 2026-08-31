@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hellstation.domain.model.ArrivalState
 import com.hellstation.domain.model.CrowdLevel
 import com.hellstation.domain.model.Direction
 import com.hellstation.domain.model.ServiceStatus
@@ -551,7 +552,10 @@ private fun TrainCompareCard(
             // 카드 하나뿐이니 초까지 보여줍니다. 분 단위로만 쓰면 60초 동안 값이
             // 그대로라 **시계가 멈춘 것처럼** 보입니다 — 결과 화면과 같은 형식입니다.
             // 아래 "다가오는 열차" 목록은 다섯 줄이 한꺼번에 초를 세면 어지러우므로 분 단위로 둡니다.
-            text = HellCopy.etaText(option?.arrival?.secondsUntilArrival(now)),
+            text = HellCopy.etaText(
+                option?.arrival?.secondsUntilArrival(now),
+                option?.arrival?.state ?: ArrivalState.UNKNOWN,
+            ),
             style = HellTextStyles.boardNumberSmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -590,7 +594,7 @@ private fun UpcomingList(board: StationBoard, now: Instant) {
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
-                    text = HellCopy.etaShort(option.arrival.secondsUntilArrival(now)),
+                    text = HellCopy.etaShort(option.arrival.secondsUntilArrival(now), option.arrival.state),
                     style = HellTextStyles.boardMono,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.width(44.dp),
