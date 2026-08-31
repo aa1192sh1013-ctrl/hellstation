@@ -41,6 +41,9 @@ import com.hellstation.ui.component.rememberPulse
 import com.hellstation.ui.theme.CrowdPalette
 import com.hellstation.ui.theme.HellTheme
 import com.hellstation.ui.theme.LineColors
+import androidx.compose.ui.graphics.StrokeJoin
+import kotlin.math.abs
+import kotlin.math.sign
 import kotlin.math.max
 import kotlin.math.min
 
@@ -135,16 +138,22 @@ fun MetroMapView(
         }
 
         // 2. 역 점
-        val dotRadius = with(density) { (2.6f + state.scale * 0.9f).dp.toPx() }
+        //
+        // 환승역과 일반역의 크기 차이를 크게 둡니다. 둘이 비슷하면 역이 800개 가까이
+        // 되는 축소 상태에서 점이 죽처럼 뭉쳐 아무 구조도 안 보입니다.
+        // 실제 노선도도 일반역은 작은 눈금, 환승역은 큰 동그라미로 그립니다.
+        val plainRadius = with(density) { (1.5f + state.scale * 0.85f).dp.toPx() }
+        val transferRadius = with(density) { (3.4f + state.scale * 1.0f).dp.toPx() }
+        val dotRadius = transferRadius
         for (station in layout.stations) {
             val position = layout.positionOf(station.id) ?: continue
             val point = project(position)
-            if (!point.isWithin(size, margin = dotRadius * 4)) continue
+            if (!point.isWithin(size, margin = transferRadius * 4)) continue
 
             val level = snapshot.levelOf(station.id)
             drawStationDot(
                 center = point,
-                radius = if (station.isTransfer) dotRadius * 1.35f else dotRadius,
+                radius = if (station.isTransfer) transferRadius else plainRadius,
                 level = level,
                 palette = palette,
                 isDark = isDark,
@@ -174,7 +183,17 @@ fun MetroMapView(
 // ── 그리기 ──────────────────────────────────────────────────────────────────
 
 /**
- * 노선 하나. **구간마다 혼잡도가 칠해집니다.**
+ * 노선 하나. **구간마다 혼잡도가 칠해지고, 45°·90°로만 꺾입니다.**
+ *
+ * ## 왜 직선으로 잇지 않나
+ *
+ * 역 위치는 실제 위경도라 두 역을 곧게 이으면 선이 **아무 각도로** 지나갑니다.
+ * 노선이 아홉 개 넘게 겹치는 도심에서는 그 선들이 제멋대로 교차해서
+ * 어느 선이 어디로 가는지 눈으로 따라갈 수 없습니다.
+ *
+ * 실제 지하철 노선도가 전부 45°·90°만 쓰는 이유가 이것입니다. 지리적 정확도를
+ * 버리는 대신 읽을 수 있게 됩니다. 그래서 역과 역 사이를 **대각선 한 번 +
+ * 수평이나 수직 한 번**으로 꺾습니다. 양 끝은 실제 역 자리 그대로입니다.
  *
  * ## 왜 역 점만으로는 부족한가
  *
@@ -193,9 +212,9 @@ fun MetroMapView(
  *
  * ## 왜 구간마다 drawLine 을 부르지 않나
  *
- * 지도에는 구간이 300개 넘게 있고, 맥박 애니메이션 때문에 화면이 매 프레임 다시 그려집니다.
- * 구간마다 그리면 프레임마다 수백 번을 호출하게 되므로, **등급이 같은 구간끼리 하나의
- * 경로로 묶어** 등급 수(최대 5)만큼만 그립니다.
+ * 지도에는 구간이 800개 가까이 있고, 맥박 애니메이션 때문에 화면이 매 프레임 다시
+ * 그려집니다. 구간마다 그리면 프레임마다 수천 번을 호출하게 되므로, **등급이 같은
+ * 구간끼리 하나의 경로로 묶어** 등급 수(최대 5)만큼만 그립니다.
  */
 private fun DrawScope.drawLineShape(
     shape: MetroLineShape,
@@ -217,14 +236,17 @@ private fun DrawScope.drawLineShape(
     for (index in 0 until segmentCount) {
         val from = points[index] ?: continue
         val to = points[(index + 1) % ids.size] ?: continue
+        val knee = kneeBetween(from, to)
 
         core.moveTo(from.x, from.y)
+        core.lineTo(knee.x, knee.y)
         core.lineTo(to.x, to.y)
 
         val level = snapshot.levelOf(ids[index])
         if (!level.isKnown) continue
         halos.getOrPut(level) { Path() }.apply {
             moveTo(from.x, from.y)
+            lineTo(knee.x, knee.y)
             lineTo(to.x, to.y)
         }
     }
@@ -233,7 +255,7 @@ private fun DrawScope.drawLineShape(
         drawPath(
             path = path,
             color = palette.of(level).vivid.copy(alpha = SEGMENT_HALO_ALPHA),
-            style = Stroke(width = width * SEGMENT_HALO_WIDTH),
+            style = Stroke(width = width * SEGMENT_HALO_WIDTH, join = StrokeJoin.Round),
         )
     }
 
@@ -241,8 +263,24 @@ private fun DrawScope.drawLineShape(
     drawPath(
         path = core,
         color = color.copy(alpha = 0.9f),
-        style = Stroke(width = width * SEGMENT_CORE_WIDTH),
+        style = Stroke(width = width * SEGMENT_CORE_WIDTH, join = StrokeJoin.Round),
     )
+}
+
+/**
+ * 두 역 사이에서 선이 꺾이는 지점.
+ *
+ * 긴 쪽으로 먼저 45° 대각선을 긋고, 남은 만큼을 수평이나 수직으로 갑니다.
+ * 이렇게 하면 어떤 두 점을 이어도 선이 45°와 0°(또는 90°)로만 이루어집니다.
+ */
+private fun kneeBetween(start: Offset, end: Offset): Offset {
+    val dx = end.x - start.x
+    val dy = end.y - start.y
+    return if (abs(dx) > abs(dy)) {
+        Offset(start.x + sign(dx) * abs(dy), end.y)
+    } else {
+        Offset(end.x, start.y + sign(dy) * abs(dx))
+    }
 }
 
 /**
