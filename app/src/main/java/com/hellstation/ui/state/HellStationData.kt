@@ -259,13 +259,27 @@ fun rememberStation(id: StationId?): Station? {
     return if (facade == null) fallback else live
 }
 
-/** 지금 시각이 속한 30분 시간대. 자정을 넘긴 운행까지 계산에 넣습니다. */
+/**
+ * 지금 시각이 속한 30분 시간대.
+ *
+ * ## 운행 시간 밖이면 가장 가까운 끝으로 당깁니다
+ *
+ * 새벽 0시~5시 반의 "지금"은 서비스 시간으로 25:00~29:30이라 **어느 표에도 없는
+ * 시간대**입니다. 그대로 쓰면 통계도 슬라이더 눈금도 못 찾아서 화면이 통째로
+ * "정보없음"이 됩니다 — 새벽 1시에 검색하면 모든 역이 그랬습니다.
+ *
+ * 지도만 따로 당겨 쓰고 있었는데, 검색·역 상세도 같은 값을 봐야 화면끼리 어긋나지
+ * 않습니다. 그래서 여기 한 곳에서 당깁니다.
+ */
 @Composable
 fun rememberNowSlot(at: Instant): TimeSlot {
     val facade = rememberFacade()
     return remember(facade, at) {
-        facade?.nowSlot(at)
+        val raw = facade?.nowSlot(at)
             ?: TimeSlot.of(at.atZone(java.time.ZoneId.of("Asia/Seoul")).toLocalTime())
+        val first = TimeSlot.ALL.first().minutesFromMidnight
+        val last = TimeSlot.ALL.last().minutesFromMidnight
+        TimeSlot(raw.minutesFromMidnight.coerceIn(first, last))
     }
 }
 

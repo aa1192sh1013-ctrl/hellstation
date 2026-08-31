@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -114,17 +115,9 @@ fun HeatmapScreen(
     val nowSlot = rememberNowSlot(now)
 
     // 슬라이더 위치는 화면을 돌려도 유지되어야 합니다.
-    //
-    // 슬라이더 눈금은 05:30~24:30 뿐인데, 새벽 0시~5시 반 사이의 "지금"은 25:00~29:30 이라
-    // 눈금 밖입니다. 그대로 두면 **손잡이는 맨 왼쪽(05:30)에 붙어 있는데 글씨는 26:00** 이라고
-    // 하는 상태가 됩니다. 눈금 안으로 당겨서 손잡이와 글씨를 맞춥니다.
-    val startSlot = remember(nowSlot) {
-        val first = TimeSlot.ALL.first().minutesFromMidnight
-        val last = TimeSlot.ALL.last().minutesFromMidnight
-        TimeSlot(nowSlot.minutesFromMidnight.coerceIn(first, last))
-    }
-    var selectedSlotMinutes by rememberSaveable(startSlot.minutesFromMidnight) {
-        mutableIntStateOf(startSlot.minutesFromMidnight)
+    // 운행 시간 밖으로 나가는 것은 rememberNowSlot 이 이미 막아 줍니다.
+    var selectedSlotMinutes by rememberSaveable(nowSlot.minutesFromMidnight) {
+        mutableIntStateOf(nowSlot.minutesFromMidnight)
     }
     val selectedSlot = TimeSlot(selectedSlotMinutes)
 
@@ -212,7 +205,7 @@ fun HeatmapScreen(
             TimeSlider(
                 selected = selectedSlot,
                 levels = data.dayLevels,
-                nowSlot = startSlot,
+                nowSlot = nowSlot,
                 onSelect = { selectedSlotMinutes = it.minutesFromMidnight },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -424,19 +417,25 @@ private fun MapButton(
         onClick = onClick,
         modifier = Modifier
             .size(42.dp)
+            .border(
+                width = 1.5.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f),
+                shape = RoundedCornerShape(12.dp),
+            )
             .semantics { contentDescription = description },
         shape = RoundedCornerShape(12.dp),
         // 기본값(secondaryContainer)은 연분홍이라 사탕처럼 보였습니다.
-        // 지도 위에 뜨는 조작 버튼은 배경과 같은 계열이되 테두리로 구분하는 편이 낫습니다.
+        // 그렇다고 배경과 같은 색으로 두니 이번엔 **안 보였습니다.**
+        // 한 단계 밝은 판 + 액센트 테두리로 지도 위에서 확실히 떠 있게 합니다.
         colors = IconButtonDefaults.filledTonalIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             contentColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
     }
