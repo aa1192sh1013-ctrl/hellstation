@@ -77,7 +77,7 @@ class ArrivalRepositoryImpl(
     private fun userMessage(reason: UnavailableReason): String = when (reason) {
         UnavailableReason.NETWORK -> "지금 열차 정보를 받아오지 못했습니다"
         UnavailableReason.NO_KEY -> "실시간 인증키가 없어 이 역은 조회할 수 없습니다"
-        UnavailableReason.OUTSIDE_SEOUL -> "서울시 구간 밖이라 실시간 정보가 제공되지 않습니다"
+        UnavailableReason.OUTSIDE_SEOUL -> "서울시 구간 밖이라 실시간 정보가 없습니다"
         UnavailableReason.CLOSED -> "지금은 운행 시간이 아닙니다"
         UnavailableReason.NO_DATA -> "이 역의 열차 정보가 없습니다"
     }

@@ -165,8 +165,8 @@ object HellCopy {
      */
     private fun plainSubtitle(status: ServiceStatus): String = when (status) {
         ServiceStatus.DELAYED -> "지연 중이라 평소와 다를 수 있습니다"
-        ServiceStatus.SUSPENDED -> "열차 정보 없이 역 기준으로 어림한 값입니다"
-        ServiceStatus.CLOSED -> "운행 시간이 아니라 예상값만 보여 드립니다"
+        ServiceStatus.SUSPENDED -> "열차 정보가 없어 역 기준으로 어림한 값입니다"
+        ServiceStatus.CLOSED -> "운행 시간이 아니어서 예상값만 보여드립니다"
         ServiceStatus.NORMAL -> "실측이 아닌 예상값이라 실제와 다를 수 있습니다"
     }
 
@@ -259,7 +259,7 @@ object HellCopy {
 
     /** 데이터 계층 설명 — 어디서 온 값인지 궁금해하는 사용자를 위해. */
     fun tierLabel(tier: DataTier): String = when (tier) {
-        DataTier.LIVE -> "지금 측정값"
+        DataTier.LIVE -> "실시간 측정값"
         DataTier.ESTIMATED -> "실시간 보정"
         DataTier.HISTORICAL -> "통계 평균"
         DataTier.NONE -> "자료 없음"
@@ -294,15 +294,15 @@ object HellCopy {
     fun failureHeadline(reason: UnavailableReason): String = when (reason) {
         UnavailableReason.NETWORK -> "지금은 연결이 안 됩니다"
         UnavailableReason.NO_KEY -> "이 역은 실시간 조회 범위 밖입니다"
-        UnavailableReason.OUTSIDE_SEOUL -> "서울 밖 구간이라 실시간 정보가 없습니다"
+        UnavailableReason.OUTSIDE_SEOUL -> "서울시 구간 밖이라 실시간 정보가 없습니다"
         UnavailableReason.CLOSED -> "지금은 운행 시간이 아닙니다"
         UnavailableReason.NO_DATA -> "도착 정보를 받지 못했습니다"
     }
 
     fun failureSubtitle(reason: UnavailableReason): String = when (reason) {
         UnavailableReason.NETWORK -> "지하철 안에서는 흔한 일입니다. 다시 해 보세요"
-        UnavailableReason.NO_KEY -> "인증키가 없어 서울역 말고는 실시간을 받을 수 없습니다"
-        UnavailableReason.OUTSIDE_SEOUL -> "역 기준 예상 혼잡도만 보여 드립니다"
+        UnavailableReason.NO_KEY -> "인증키가 없어 서울역 말고는 실시간 정보를 받을 수 없습니다"
+        UnavailableReason.OUTSIDE_SEOUL -> "역 기준 예상 혼잡도만 보여드립니다"
         UnavailableReason.CLOSED -> "첫차는 05:30 무렵입니다"
         UnavailableReason.NO_DATA -> "잠시 뒤 다시 해 보세요"
     }
@@ -329,7 +329,7 @@ object HellCopy {
     fun emptyTrains(status: ServiceStatus): String = when (status) {
         ServiceStatus.CLOSED -> "오늘 운행이 끝났습니다"
         ServiceStatus.SUSPENDED -> "들어오는 열차가 없습니다"
-        ServiceStatus.DELAYED -> "도착 예정인 열차를 아직 받지 못했습니다"
+        ServiceStatus.DELAYED -> "도착 예정 정보를 아직 받지 못했습니다"
         ServiceStatus.NORMAL -> "도착 정보를 받지 못했습니다"
     }
 

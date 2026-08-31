@@ -198,7 +198,7 @@ private fun DataStatusCard(status: DataStatus) {
         if (!status.isFullyLive) {
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "위 항목이 갖춰지지 않으면 값이 어림값이라 % 숫자를 숨깁니다. " +
+                text = "위 항목이 갖춰지지 않으면 어림값이라 % 숫자를 숨깁니다. " +
                     "일부러 그렇게 했습니다 — 어림값에 정확한 숫자를 붙이면 실측으로 오해합니다.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

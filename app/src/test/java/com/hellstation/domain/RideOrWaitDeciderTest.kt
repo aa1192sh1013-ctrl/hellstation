@@ -15,6 +15,7 @@ import com.hellstation.domain.model.TrainType
 import com.hellstation.domain.model.Verdict
 import com.hellstation.domain.usecase.RideOrWaitDecider
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.Instant
@@ -124,6 +125,10 @@ class RideOrWaitDeciderTest {
         assertEquals(DecisionRule.NEXT_MUCH_BETTER_LONG_WAIT, result.rule)
         // 얼마나 나은지는 그대로 알려 줘야 사용자가 직접 판단할 수 있습니다.
         assertTrue(result.reason.contains("훨씬"))
+        // 받침에 따라 조사가 갈립니다. "혼잡로"·"잠시을" 같은 말이 나오면 안 됩니다.
+        assertFalse(result.reason.contains("혼잡로"))
+        assertFalse(result.reason.contains("지옥로"))
+        assertFalse(result.reason.contains("잠시을"))
     }
 
     @Test

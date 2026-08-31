@@ -114,8 +114,11 @@ class RideOrWaitDecider {
                 ride(
                     current, next, waitSeconds, combinedConfidence,
                     DecisionRule.NEXT_MUCH_BETTER_LONG_WAIT,
-                    "다음 열차는 ${label(nextLevel)}로 훨씬 낫지만 " +
-                        "${waitPhrase(waitSeconds)}을 기다려야 합니다. 지금 타세요.",
+                    // 등급 이름의 받침에 따라 "으로/로"가 갈립니다.
+                    // 손으로 "로"라고 써 두면 "혼잡로 훨씬 낫지만"이 나옵니다.
+                    "다음 열차는 ${label(nextLevel)}${toParticle(label(nextLevel))} 훨씬 낫지만 " +
+                        // "3분을"은 되지만 "잠시을"은 안 됩니다. 조사를 빼면 둘 다 자연스럽습니다.
+                        "${waitPhrase(waitSeconds)} 기다려야 합니다. 지금 타세요.",
                 )
             }
         }
@@ -174,6 +177,21 @@ class RideOrWaitDecider {
      */
     private fun waitLimitFor(levelGain: Int): Int =
         SHORT_WAIT_SECONDS * levelGain.coerceIn(1, MAX_WAIT_STEPS)
+
+    /**
+     * 앞말의 받침에 따라 "으로 / 로"를 고릅니다.
+     *
+     * 값이 문장 가운데 끼어들면 받침이 그때그때 달라져서 손으로 쓸 수 없습니다.
+     * 여유(받침 없음)는 "여유로", 혼잡(ㅂ)은 "혼잡으로"가 맞습니다.
+     *
+     * 한글 음절은 유니코드에서 (초성, 중성, 종성) 순서로 배열돼 있어서,
+     * 가(0xAC00)로부터의 거리를 28로 나눈 나머지가 0이면 받침이 없습니다.
+     */
+    private fun toParticle(word: String): String {
+        val last = word.trimEnd().lastOrNull() ?: return "로"
+        if (last !in '가'..'힣') return "로"
+        return if ((last.code - 0xAC00) % 28 == 0) "로" else "으로"
+    }
 
     private fun waitPhrase(seconds: Int?): String {
         if (seconds == null) return "잠시"

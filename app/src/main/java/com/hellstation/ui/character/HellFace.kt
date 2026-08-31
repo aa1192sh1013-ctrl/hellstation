@@ -194,80 +194,106 @@ private fun DrawScope.drawWindshield(u: Float) {
 }
 
 /**
- * 눈. 창 너머로 보이는 **빛줄기 두 개**입니다.
+ * 눈. 창 너머로 타오르는 **불꽃 두 개**입니다.
  *
- * 흰자와 동공을 그리면 바로 만화가 됩니다. 가로로 긴 선 하나만 두고
- * 기울기로 감정을 냅니다.
+ * 처음에는 가로 빛줄기였는데, 전동차 계기판처럼 보여서 악마가 남지 않았습니다.
+ * 불꽃으로 바꾸니 **차가운 쇳덩이 안에서 뭔가 타고 있는** 그림이 됩니다.
+ *
+ * 두 불꽃 모두 **안쪽으로 기울입니다.** 눈썹을 안쪽으로 모으면 화난 얼굴이 되는 것과
+ * 같은 원리라, 이것만으로 표정이 섭니다.
+ *
+ * 등급은 **불길의 세기**로 나타냅니다. 여유는 작은 불씨, 대환장은 눈 밖으로 넘칩니다.
+ * 흰자와 동공을 그리면 그 순간 만화가 되므로 끝까지 넣지 않습니다.
  */
 private fun DrawScope.drawEyes(u: Float, level: CrowdLevel, color: Color) {
-    val leftCenter = Offset(41f * u, 50f * u)
-    val rightCenter = Offset(59f * u, 50f * u)
+    val leftCenter = Offset(41f * u, 51f * u)
+    val rightCenter = Offset(59f * u, 51f * u)
 
-    when (level) {
-        // 여유 — 완만하게 처진 눈. 느긋합니다.
-        CrowdLevel.EASY -> {
-            drawSlit(leftCenter, u, color, tilt = -0.30f)
-            drawSlit(rightCenter, u, color, tilt = 0.30f)
-        }
-        // 보통 — 수평. 무표정.
-        CrowdLevel.BUSY -> {
-            drawSlit(leftCenter, u, color, tilt = 0f)
-            drawSlit(rightCenter, u, color, tilt = 0f)
-        }
-        // 혼잡 — 안쪽이 조금 올라갑니다. 슬슬 못마땅합니다.
-        CrowdLevel.BAD -> {
-            drawSlit(leftCenter, u, color, tilt = 0.34f)
-            drawSlit(rightCenter, u, color, tilt = -0.34f)
-        }
-        // 지옥 — 안쪽이 크게 치켜 올라갑니다. 화가 났습니다.
-        CrowdLevel.HELL -> {
-            drawSlit(leftCenter, u, color, tilt = 0.75f, thickness = 4.2f)
-            drawSlit(rightCenter, u, color, tilt = -0.75f, thickness = 4.2f)
-        }
-        // 대환장 — 지그재그. 회로가 나갔습니다.
-        CrowdLevel.WTF -> {
-            drawZigzag(leftCenter, u, color)
-            drawZigzag(rightCenter, u, color)
-        }
-        // 모름 — 꺼진 눈.
-        CrowdLevel.UNKNOWN -> {
-            drawSlit(leftCenter, u, color.copy(alpha = 0.45f), tilt = 0f, thickness = 2.4f)
-            drawSlit(rightCenter, u, color.copy(alpha = 0.45f), tilt = 0f, thickness = 2.4f)
-        }
+    // 0(불씨) ~ 1(활활). 등급이 올라갈수록 커지고 사나워집니다.
+    val heat = when (level) {
+        CrowdLevel.EASY -> 0.20f
+        CrowdLevel.BUSY -> 0.42f
+        CrowdLevel.BAD -> 0.62f
+        CrowdLevel.HELL -> 0.85f
+        CrowdLevel.WTF -> 1f
+        CrowdLevel.UNKNOWN -> 0.12f
     }
+    val ink = if (level.isKnown) color else color.copy(alpha = 0.5f)
+
+    drawFlameEye(leftCenter, u, ink, inward = 1f, heat = heat)
+    drawFlameEye(rightCenter, u, ink, inward = -1f, heat = heat)
 }
 
 /**
- * 빛줄기 한 줄.
+ * 불꽃 하나.
  *
- * @param tilt 안쪽 끝을 얼마나 올릴지. 양수면 치켜뜬 눈이 됩니다
+ * ## 삼각형이 되지 않게 하는 것
+ *
+ * 처음엔 위가 뾰족한 삼각형처럼 보였습니다. 불꽃으로 읽히려면 세 가지가 필요합니다.
+ * **둥근 바닥**, 위로 갈수록 **잘록해지는 허리**, 한쪽으로 **눕는 끝**.
+ * 셋 중 하나만 빠져도 그냥 세모입니다.
+ *
+ * @param inward 안쪽이 어느 쪽인가. 왼쪽 눈은 +1, 오른쪽 눈은 -1.
+ *   불끝을 안쪽으로 눕혀야 두 불이 미간을 향해 모이면서 **화난 얼굴**이 됩니다
+ * @param heat 불길의 세기 0~1
  */
-private fun DrawScope.drawSlit(
+private fun DrawScope.drawFlameEye(
     center: Offset,
     u: Float,
     color: Color,
-    tilt: Float,
-    thickness: Float = 3.4f,
+    inward: Float,
+    heat: Float,
 ) {
-    val half = 7f * u
-    val lift = tilt * 5f * u
-    drawLine(
-        color = color,
-        start = Offset(center.x - half, center.y + lift),
-        end = Offset(center.x + half, center.y - lift),
-        strokeWidth = thickness * u,
+    val halfWidth = (3.2f + 1.2f * heat) * u
+    val height = (8.5f + 6f * heat) * u
+    val bottom = center.y + height * 0.34f
+    val tipX = center.x + inward * (2.4f + 2.4f * heat) * u
+
+    drawPath(flamePath(center.x, bottom, halfWidth, height, tipX), color)
+
+    // 심지. 안쪽을 한 겹 밝게 해야 그림이 아니라 불로 보입니다.
+    // 끝을 덜 눕혀야 겉불꽃 안에 들어앉습니다.
+    drawPath(
+        flamePath(
+            centerX = center.x,
+            bottom = bottom - height * 0.06f,
+            halfWidth = halfWidth * 0.46f,
+            height = height * 0.55f,
+            tipX = center.x + (tipX - center.x) * 0.45f,
+        ),
+        Color.White.copy(alpha = 0.5f + 0.28f * heat),
     )
 }
 
-/** 대환장 눈. 회로가 튄 것처럼 꺾입니다. */
-private fun DrawScope.drawZigzag(center: Offset, u: Float, color: Color) {
-    val path = Path().apply {
-        moveTo(center.x - 7f * u, center.y + 3f * u)
-        lineTo(center.x - 2f * u, center.y - 3f * u)
-        lineTo(center.x + 2f * u, center.y + 3f * u)
-        lineTo(center.x + 7f * u, center.y - 3f * u)
-    }
-    drawPath(path, color, style = Stroke(width = 3.2f * u))
+/** 불꽃 윤곽 하나. 바닥이 둥글고 허리가 잘록하며 끝이 [tipX] 쪽으로 눕습니다. */
+private fun flamePath(
+    centerX: Float,
+    bottom: Float,
+    halfWidth: Float,
+    height: Float,
+    tipX: Float,
+): Path = Path().apply {
+    val top = bottom - height
+    moveTo(centerX - halfWidth, bottom)
+    // 바깥쪽 옆구리 -> 잘록한 허리 -> 뾰족한 끝
+    cubicTo(
+        centerX - halfWidth * 1.12f, bottom - height * 0.42f,
+        tipX - halfWidth * 0.95f, bottom - height * 0.66f,
+        tipX, top,
+    )
+    // 끝 -> 반대쪽 옆구리
+    cubicTo(
+        tipX + halfWidth * 0.55f, bottom - height * 0.62f,
+        centerX + halfWidth * 1.12f, bottom - height * 0.40f,
+        centerX + halfWidth, bottom,
+    )
+    // 둥근 바닥. 이게 있어야 세모가 아니라 불이 됩니다.
+    cubicTo(
+        centerX + halfWidth, bottom + halfWidth * 0.85f,
+        centerX - halfWidth, bottom + halfWidth * 0.85f,
+        centerX - halfWidth, bottom,
+    )
+    close()
 }
 
 /** 배장기. 전동차 아래쪽 검은 치마. 이게 있어야 바닥이 붕 뜨지 않습니다. */

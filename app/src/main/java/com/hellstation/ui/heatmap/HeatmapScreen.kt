@@ -166,7 +166,7 @@ fun HeatmapScreen(
         )
 
         TopBar(
-            subtitle = headline?.title ?: "역을 누르면 자세히 보여드려요",
+            subtitle = headline?.title ?: "역을 누르면 자세히 보여드립니다",
             warning = data.warning,
             onSearchClick = onSearchClick,
             onSettingsClick = onSettingsClick,

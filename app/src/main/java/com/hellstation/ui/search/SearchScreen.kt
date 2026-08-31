@@ -227,7 +227,7 @@ private fun EmptyResult(query: String) {
             HellFace(level = CrowdLevel.UNKNOWN, modifier = Modifier.size(96.dp))
             Text(
                 // 결과가 없을 때는 농담하지 않습니다. 사용자는 지금 막힌 상태입니다.
-                text = "\"$query\" 에 맞는 역이 없습니다",
+                text = "\"$query\"에 맞는 역이 없습니다",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
