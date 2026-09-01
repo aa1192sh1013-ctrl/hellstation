@@ -207,4 +207,29 @@ class TimeAndNameTest {
         // 둘 다 운행 시간 안에 들어와야 실제로 쓰입니다.
         assertTrue(TimeSlot.fromCsvLabel("00시30분")!! in TimeSlot.ALL)
     }
+
+    @Test
+    fun `시설 구간 이름도 운영 노선으로 이어진다`() {
+        // 좌표 API 는 노선을 시설 구간명으로 부릅니다. 승객에게는 다 같은 1호선입니다.
+        assertEquals(LineId.LINE_1, LineId.fromDisplayName("경부선"))
+        assertEquals(LineId.LINE_1, LineId.fromDisplayName("경인선"))
+        assertEquals(LineId.LINE_1, LineId.fromDisplayName("경원선"))
+        assertEquals(LineId.LINE_3, LineId.fromDisplayName("일산선"))
+        assertEquals(LineId.LINE_4, LineId.fromDisplayName("안산선"))
+
+        // 역정보 API 쪽 이름 흔들림
+        assertEquals(LineId.GYEONGUI_JUNGANG, LineId.fromDisplayName("경의선"))
+        assertEquals(LineId.UI_SINSEOL, LineId.fromDisplayName("우이신설경전철"))
+        assertEquals(LineId.SUIN_BUNDANG, LineId.fromDisplayName("분당선"))
+
+        // 원래 이름은 그대로 동작해야 합니다
+        assertEquals(LineId.LINE_1, LineId.fromDisplayName("1호선"))
+        assertEquals(LineId.LINE_1, LineId.fromDisplayName("01호선"))
+        assertEquals(LineId.UI_SINSEOL, LineId.fromDisplayName("우이신설선"))
+
+        // 아직 모델에 없는 노선은 여전히 null 이어야 합니다.
+        // 여기서 아무거나 돌려주면 엉뚱한 노선에 역이 붙습니다.
+        assertNull(LineId.fromDisplayName("인천2호선"))
+        assertNull(LineId.fromDisplayName("GTX-A"))
+    }
 }
