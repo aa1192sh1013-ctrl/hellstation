@@ -6,6 +6,7 @@ import com.hellstation.domain.model.ArrivalState
 import com.hellstation.domain.model.DayType
 import com.hellstation.domain.model.Direction
 import com.hellstation.domain.model.LineId
+import com.hellstation.ui.copy.HellCopy
 import com.hellstation.domain.model.StationId
 import com.hellstation.domain.model.TimeSlot
 import com.hellstation.domain.model.Train
@@ -227,9 +228,45 @@ class TimeAndNameTest {
         assertEquals(LineId.LINE_1, LineId.fromDisplayName("01호선"))
         assertEquals(LineId.UI_SINSEOL, LineId.fromDisplayName("우이신설선"))
 
-        // 아직 모델에 없는 노선은 여전히 null 이어야 합니다.
-        // 여기서 아무거나 돌려주면 엉뚱한 노선에 역이 붙습니다.
-        assertNull(LineId.fromDisplayName("인천2호선"))
-        assertNull(LineId.fromDisplayName("GTX-A"))
+        // 모르는 이름에는 아무거나 돌려주면 안 됩니다.
+        // 여기서 대충 짐작하면 엉뚱한 노선에 역이 붙습니다.
+        assertNull(LineId.fromDisplayName("있지도않은선"))
+        assertNull(LineId.fromDisplayName(""))
+    }
+
+    @Test
+    fun `서울시 밖 노선도 이름으로 이어진다`() {
+        assertEquals(LineId.INCHEON_1, LineId.fromDisplayName("인천선"))
+        assertEquals(LineId.INCHEON_1, LineId.fromDisplayName("인천1호선"))
+        assertEquals(LineId.INCHEON_2, LineId.fromDisplayName("인천2호선"))
+        assertEquals(LineId.EVERLINE, LineId.fromDisplayName("용인경전철"))
+        assertEquals(LineId.EVERLINE, LineId.fromDisplayName("에버라인선"))
+        assertEquals(LineId.UIJEONGBU, LineId.fromDisplayName("의정부경전철"))
+        assertEquals(LineId.GIMPO_GOLD, LineId.fromDisplayName("김포도시철도"))
+        assertEquals(LineId.GTX_A, LineId.fromDisplayName("GTX-A"))
+        assertEquals(LineId.GTX_A, LineId.fromDisplayName("수도권 광역급행철도"))
+    }
+
+    @Test
+    fun `실시간을 받을 수 있는 노선인지 구분한다`() {
+        // 서울시 코드(10xx)만 실시간 도착정보가 옵니다.
+        assertTrue(LineId.LINE_1.hasRealtime)
+        assertTrue(LineId.GTX_A.hasRealtime)      // 수서·동탄에서 실제 확인
+        assertFalse(LineId.INCHEON_1.hasRealtime) // 인천교통공사 운영
+        assertFalse(LineId.GIMPO_GOLD.hasRealtime)
+    }
+
+    @Test
+    fun `노선 배지 글자는 서로 겹치지 않는다`() {
+        // "인천"으로만 줄이면 1호선과 2호선이 배지에서 구분되지 않습니다.
+        assertEquals("인1", HellCopy.lineShort(LineId.INCHEON_1))
+        assertEquals("인2", HellCopy.lineShort(LineId.INCHEON_2))
+        assertEquals("A", HellCopy.lineShort(LineId.GTX_A))
+        assertEquals("1", HellCopy.lineShort(LineId.LINE_1))
+        assertEquals("신분", HellCopy.lineShort(LineId.SINBUNDANG))
+
+        // 노선 전체에서 배지 글자가 하나도 겹치면 안 됩니다.
+        val labels = LineId.entries.map { HellCopy.lineShort(it) }
+        assertEquals(labels.size, labels.toSet().size)
     }
 }

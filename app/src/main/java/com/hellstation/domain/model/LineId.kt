@@ -33,7 +33,28 @@ enum class LineId(
     UI_SINSEOL("1092", "우이신설선", null),
     SEOHAE("1093", "서해선", null),
     GYEONGGANG("1081", "경강선", null),
+
+    // ── 서울시 실시간 API 범위 밖 ────────────────────────────────────────────
+    //
+    // 인천교통공사·경기도가 운영해서 서울시 도착정보 API 가 **열차를 하나도 주지 않습니다**
+    // (인천시청·검단오류·운양에서 직접 확인). 그래도 역과 좌표는 열린데이터광장에 있으므로
+    // 지도에 그리고 통계 어림값도 낼 수 있습니다.
+    //
+    // apiCode 가 `9`로 시작하는 것은 **서울시 코드가 아니라 앱 안에서만 쓰는 식별자**라는
+    // 표시입니다. 서울시 코드는 전부 `10xx` 이라 절대 겹치지 않습니다. 없는 코드를
+    // 그럴듯하게 지어내면 언젠가 엉뚱한 노선에 열차가 붙습니다.
+    INCHEON_1("9001", "인천1호선", null),
+    INCHEON_2("9002", "인천2호선", null),
+    EVERLINE("9003", "에버라인", null),
+    UIJEONGBU("9004", "의정부경전철", null),
+    GIMPO_GOLD("9005", "김포골드라인", null),
+
+    /** GTX-A 는 서울시 API 가 실제로 제공합니다(수서·동탄에서 subwayId 1032 확인). */
+    GTX_A("1032", "GTX-A", null),
     ;
+
+    /** 서울시 실시간 도착정보를 받을 수 있는 노선인가. */
+    val hasRealtime: Boolean get() = apiCode.startsWith("10")
 
     /** 통계 기준선(서울교통공사 CSV)을 쓸 수 있는 노선인가. */
     val hasBaseline: Boolean get() = csvLineNumber != null
@@ -93,6 +114,14 @@ enum class LineId(
             "우이신설경전철" to UI_SINSEOL,
             "신분당선(연장)" to SINBUNDANG,
             "신분당선(연장2)" to SINBUNDANG,
+
+            // 역정보 API 와 좌표 API 가 서로 다르게 부르는 노선들
+            "인천선" to INCHEON_1,
+            "용인경전철" to EVERLINE,
+            "에버라인선" to EVERLINE,
+            "의정부선" to UIJEONGBU,
+            "김포도시철도" to GIMPO_GOLD,
+            "수도권 광역급행철도" to GTX_A,
         )
 
         /**

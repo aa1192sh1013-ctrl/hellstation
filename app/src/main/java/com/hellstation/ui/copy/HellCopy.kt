@@ -340,9 +340,22 @@ object HellCopy {
      * 숫자 노선은 숫자만, 이름 노선은 앞 두 글자를 씁니다.
      */
     fun lineShort(line: LineId): String {
-        // "9호선"은 csvLineNumber가 없으므로(통계 미제공) 이름에서 숫자를 뽑습니다.
-        val digits = line.displayName.takeWhile { it.isDigit() }
-        return if (digits.isNotEmpty()) digits else line.displayName.removeSuffix("선").take(2)
+        val name = line.displayName
+
+        // "1호선" -> "1"
+        val leading = name.takeWhile { it.isDigit() }
+        if (leading.isNotEmpty()) return leading
+
+        // "인천1호선" -> "인1". 앞 두 글자만 쓰면 인천1호선과 인천2호선이
+        // 똑같이 "인천"이 되어 배지로 구분이 안 됩니다.
+        val embedded = name.firstOrNull { it.isDigit() }
+        if (embedded != null) return "${name.first()}$embedded"
+
+        // "GTX-A" -> "A". 실제 노선도에서도 알파벳 하나로 표기합니다.
+        val afterDash = name.substringAfter('-', "")
+        if (afterDash.isNotBlank() && afterDash.length <= 2) return afterDash
+
+        return name.removeSuffix("선").take(2)
     }
 
     /**

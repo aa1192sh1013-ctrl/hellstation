@@ -220,6 +220,12 @@ object LineColors {
         LineId.UI_SINSEOL to Color(0xFFB7C450),
         LineId.SEOHAE to Color(0xFF8FC31F),
         LineId.GYEONGGANG to Color(0xFF0054A6),
+        LineId.INCHEON_1 to Color(0xFF7CA8D5),
+        LineId.INCHEON_2 to Color(0xFFED8B00),
+        LineId.EVERLINE to Color(0xFF6FB245),
+        LineId.UIJEONGBU to Color(0xFFFDA600),
+        LineId.GIMPO_GOLD to Color(0xFFA17E46),
+        LineId.GTX_A to Color(0xFF9A6292),
     )
 
     fun of(line: LineId): Color = map[line] ?: Color(0xFF8C8A93)
